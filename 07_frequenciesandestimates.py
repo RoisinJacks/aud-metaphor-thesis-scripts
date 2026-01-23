@@ -115,8 +115,11 @@ def process_workbook(workbook_path):
             results[sheet_name]['sample_remaining_rows'] = sample_remaining_rows
             results[sheet_name]['sample_metaphors'] = sample_metaphor_count
             # --- Added: scale-up estimate for high-frequency (HF) sample + final estimate (excluding 'extra') ---
-            # The remaining sample rows represent a 20% sample of high-frequency types, so scale by 5.
-            hf_estimated_metaphors = sample_metaphor_count * 5
+            # Scale up based on the proportion of sample rows to total HF rows
+            if sample_remaining_rows > 0:
+                hf_estimated_metaphors = (sample_metaphor_count / sample_remaining_rows) * row_count
+            else:
+                hf_estimated_metaphors = 0
             final_estimate_excluding_extra = hf_estimated_metaphors + lf_metaphor_count  # add LF metaphors (coded in full)
 
             results[sheet_name]['hf_estimated_metaphors'] = hf_estimated_metaphors
